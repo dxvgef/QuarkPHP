@@ -5,5 +5,34 @@
 
 
 #### 与 nikic/FastRoute 配合使用：
+```PHP
+<?php
+define('ROOT_PATH', dirname($_SERVER['DOCUMENT_ROOT']));
+require ROOT_PATH . '/vendor/autoload.php';
+//载入QuarkPHP文件
+require ROOT_PATH . '/quarkphp.php';
 
+$dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
+    $r->addRoute('GET', '/', 'Index.Main');
+});
+
+$httpMethod = $_SERVER['REQUEST_METHOD'];
+$uri = rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+$routeInfo = $dispatcher->dispatch($httpMethod, $uri);
+
+switch ($routeInfo[0]) {
+    case \FastRoute\Dispatcher::NOT_FOUND:
+        echo '404 Not Found';
+        break;
+    case \FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
+        $allowedMethods = $routeInfo[1];
+        echo '405 Method Not Allowed';
+        break;
+    case \FastRoute\Dispatcher::FOUND:
+        //执行QuarkPHP调度器并传入控制器名和路由参数
+        \QuarkPHP\Dispatcher::Run($routeInfo[1], $routeInfo[2]);
+        break;
+}
+?>
+```
 #### 与 c9s/Pux 配合使用：
