@@ -6,6 +6,9 @@
 * 控制器函数return后自动加载视图（可在控制器内启用或禁用）
 * HTML静态文件缓存
 * Logger日志文件记录器
+* MySQL连接器(PDO扩展)
+* PostgreSQL连接器（PDO扩展）
+* Redis连接器
 
 
 #### 与 [nikic/FastRoute](https://github.com/nikic/FastRoute) 路由程序整合示例：
