@@ -1,5 +1,5 @@
 # QuarkPHP
-“夸克PHP”是核心只有一个php文件的微型PHP框架，追求的是灵活定制、随处可用的特点。框架没有包含URI路由，但可以轻松与 [nikic/FastRoute](https://github.com/nikic/FastRoute) 或 [c9s/Pux](https://github.com/c9s/Pux) 等成熟的路由程序整合。
+“QuarkPHP”是核心只有一个php文件的微型PHP框架，追求的是灵活定制、随处可用的特点。框架没有包含URI路由，但可以轻松与 [nikic/FastRoute](https://github.com/nikic/FastRoute) 或 [c9s/Pux](https://github.com/c9s/Pux) 等成熟的路由程序整合。
 
 ## 功能列表
 * MVC结构
