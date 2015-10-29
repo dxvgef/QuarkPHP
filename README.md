@@ -1,12 +1,12 @@
 # QuarkPHP
-“QuarkPHP”是核心只有一个php文件的微型PHP框架，追求的是灵活定制、随处可用的特点。框架没有包含URI路由，但可以轻松与 [nikic/FastRoute](https://github.com/nikic/FastRoute) 或 [c9s/Pux](https://github.com/c9s/Pux) 等成熟的路由程序整合。
+“QuarkPHP”是核心只有一个php文件的微型PHP框架，以“灵活定制、随处可用”为开发理念。没有包含URI路由，但可以轻松与 [nikic/FastRoute](https://github.com/nikic/FastRoute) 或 [c9s/Pux](https://github.com/c9s/Pux) 等成熟的路由程序整合。
 
 ## 功能列表
 * MVC结构
 * 控制器函数return后自动加载视图（可在控制器内启用或禁用）
 * HTML静态文件缓存
 * Logger日志文件记录器
-* 更多功能准备以插件的形式提供...
+* 更多功能准备以插件的形式发布...
 
 
 #### 与 [nikic/FastRoute](https://github.com/nikic/FastRoute) 路由程序整合示例：
