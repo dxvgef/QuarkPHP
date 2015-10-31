@@ -6,7 +6,7 @@ PHP开发的微型框架，以“灵活定制、随处可用”为开发理念�
 * 控制器函数return后自动加载视图（可在控制器内启用或禁用）
 * HTML静态文件缓存
 * Logger日志文件记录器
-* 连接器(连接并返回MySQL/PostgreSQL/Redis/Memcache/Mongodb原生对象)
+* 连接器(连接并返回MySQL/PostgreSQL/Redis/Memcache/Mongodb原生对象，未封装CURD)
 * 支持中文或自定义字符的图形验证码
 
 
