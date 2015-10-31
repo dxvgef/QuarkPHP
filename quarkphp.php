@@ -1,53 +1,54 @@
 <?php
 namespace QuarkPHP {
 
-//    //ÉèÖÃQuarkPHPÔËĞĞ²ÎÊı
-//    Dispatcher::$htmlCache = false;  //¿ªÆôHTML»º´æ
-//    Dispatcher::$htmlCachePath = '/htmlcache';  //HTML»º´æÂ·¾¶
-//    Dispatcher::$controllerPath = '/controller';  //¿ØÖÆÆ÷ÎÄ¼şÂ·¾¶
-//    Base::$ModelPath = '/model';  //HTML»º´æÂ·¾¶
-//    Base::$ViewPath = '/view';  //HTML»º´æÂ·¾¶
-//    Logger::$Level = 'warn';   //ÈÕÖ¾¼ÇÂ¼¼¶±ğ
-//    Logger::$Path = '/log';   //ÈÕÖ¾ÎÄ¼şÄ¿Â¼
+//    //è®¾ç½®QuarkPHPè¿è¡Œå‚æ•°
+//    Dispatcher::$htmlCache = false;  //å¼€å¯HTMLç¼“å­˜
+//    Dispatcher::$htmlCachePath = '/htmlcache';  //HTMLç¼“å­˜è·¯å¾„
+//    Dispatcher::$controllerPath = '/controller';  //æ§åˆ¶å™¨æ–‡ä»¶è·¯å¾„
+//    Base::$ModelPath = '/model';  //HTMLç¼“å­˜è·¯å¾„
+//    Base::$ViewPath = '/view';  //HTMLç¼“å­˜è·¯å¾„
+//    Logger::$Level = 'warn';   //æ—¥å¿—è®°å½•çº§åˆ«
+//    Logger::$Path = '/log';   //æ—¥å¿—æ–‡ä»¶ç›®å½•
+//    æ›´å¤šé…ç½®å‚æ•°è¯·æŸ¥çœ‹å„ç±»ä¸­çš„æ³¨é‡Š
 
-    //µ÷¶ÈÆ÷
+    //è°ƒåº¦å™¨
     class Dispatcher {
         public static $htmlCache = false;
         public static $htmlCachePath = '';
         public static $controllerPath = '/controller';
 
-        //Ö´ĞĞµ÷¶È
+        //æ‰§è¡Œè°ƒåº¦
         static public function Run($controller, $routerParams = array()) {
-            //ÅĞ¶Ï²¢¶ÁÈ¡HTML»º´æÎÄ¼ş
+            //åˆ¤æ–­å¹¶è¯»å–HTMLç¼“å­˜æ–‡ä»¶
             if (self::$htmlCache == true) {
                 self::getHTMLCache();
             }
 
-            //½âÎö¿ØÖÆÆ÷ĞÅÏ¢
+            //è§£ææ§åˆ¶å™¨ä¿¡æ¯
             $info = self::parseController($controller);
-            //ÅĞ¶Ï¿ØÖÆÆ÷ÎÄ¼şÊÇ·ñ´æÔÚ
+            //åˆ¤æ–­æ§åˆ¶å™¨æ–‡ä»¶æ˜¯å¦å­˜åœ¨
             if (!file_exists($info['path'])) {
-                echo '¿ØÖÆÆ÷ÎÄ¼ş' . $info['path'] . '²»´æÔÚ';
+                echo 'æ§åˆ¶å™¨æ–‡ä»¶' . $info['path'] . 'ä¸å­˜åœ¨';
                 exit();
             }
-            //ÔØÈë¿ØÖÆÆ÷ÎÄ¼ş
+            //è½½å…¥æ§åˆ¶å™¨æ–‡ä»¶
             require_once($info['path']);
-            //ÅĞ¶Ï¿ØÖÆÆ÷Àà¼°·½·¨ÊÇ·ñ´æÔÚ
+            //åˆ¤æ–­æ§åˆ¶å™¨ç±»åŠæ–¹æ³•æ˜¯å¦å­˜åœ¨
             if (!method_exists($info['class'], $info['func'])) {
-                echo '¿ØÖÆÆ÷ÎÄ¼ş' . $info['path'] . 'µÄ' . $info["class"] . 'Àà»òÆä' . $info["func"] . '·½·¨²»´æÔÚ';
+                echo 'æ§åˆ¶å™¨æ–‡ä»¶' . $info['path'] . 'çš„' . $info["class"] . 'ç±»æˆ–å…¶' . $info["func"] . 'æ–¹æ³•ä¸å­˜åœ¨';
                 exit();
             }
 
-            //°ÑÂ·ÓÉ²ÎÊı´«Èëµ½
+            //æŠŠè·¯ç”±å‚æ•°ä¼ å…¥åˆ°
             Base::$RouteParams =& $routerParams;
 
-            //´ò¿ªÊä³ö»º´æ
+            //æ‰“å¼€è¾“å‡ºç¼“å­˜
             ob_start();
 
-            //Ö´ĞĞ¿ØÖÆÆ÷
+            //æ‰§è¡Œæ§åˆ¶å™¨
             $info['class']::$info['func']();
 
-            //×Ô¶¯Ö´ĞĞÊÓÍ¼
+            //è‡ªåŠ¨æ‰§è¡Œè§†å›¾
             switch (Base::$ViewType) {
                 case 'html':
                     if (Base::$ViewFile != '') {
@@ -79,13 +80,13 @@ namespace QuarkPHP {
         private static function makeHTMLCache() {
             $code = md5($_SERVER['REQUEST_URI']);
             $file = ROOT_PATH . '/' . Dispatcher::$htmlCachePath . '/' . $code . '.html';
-            $content = ob_get_contents();//È¡µÃphpÒ³ÃæÊä³öµÄÈ«²¿ÄÚÈİ
-            $fp = fopen(ROOT_PATH . '/' . Dispatcher::$htmlCachePath . '/' . $code . '.html', 'w'); //´´½¨Ò»¸öÎÄ¼ş£¬²¢´ò¿ª£¬×¼±¸Ğ´Èë
-            fwrite($fp, $content); //°ÑphpÒ³ÃæµÄÄÚÈİÈ«²¿Ğ´Èëoutput00001.html£¬È»ºó¡­¡­
+            $content = ob_get_contents();//å–å¾—phpé¡µé¢è¾“å‡ºçš„å…¨éƒ¨å†…å®¹
+            $fp = fopen(ROOT_PATH . '/' . Dispatcher::$htmlCachePath . '/' . $code . '.html', 'w'); //åˆ›å»ºä¸€ä¸ªæ–‡ä»¶ï¼Œå¹¶æ‰“å¼€ï¼Œå‡†å¤‡å†™å…¥
+            fwrite($fp, $content); //æŠŠphpé¡µé¢çš„å†…å®¹å…¨éƒ¨å†™å…¥output00001.htmlï¼Œç„¶åâ€¦â€¦
             fclose($fp);
         }
 
-        //½âÎö¿ØÖÆÆ÷ÎÄ¼şÂ·¾¶¡¢ÀàÃû¡¢·½·¨Ãû
+        //è§£ææ§åˆ¶å™¨æ–‡ä»¶è·¯å¾„ã€ç±»åã€æ–¹æ³•å
         private static function parseController($path) {
             $pathinfo = pathinfo($path);
             $return["class"] = ($pathinfo["filename"] == "") ? "" : $pathinfo["filename"];
@@ -99,23 +100,23 @@ namespace QuarkPHP {
         }
     }
 
-    //¿É±»¿ØÖÆÆ÷¼Ì³ĞµÄ»ùÀà£¬ÊµÏÖ »ñÈ¡Â·ÓÉ²ÎÊıÖµ¡¢Ö´ĞĞÊÓÍ¼¡¢ÔØÈëÄ£ĞÍ¡¢ÔØÈë²å¼şµÈ¹¦ÄÜ
+    //å¯è¢«æ§åˆ¶å™¨ç»§æ‰¿çš„åŸºç±»ï¼Œå®ç° è·å–è·¯ç”±å‚æ•°å€¼ã€æ‰§è¡Œè§†å›¾ã€è½½å…¥æ¨¡å‹ã€è½½å…¥æ’ä»¶ç­‰åŠŸèƒ½
     class Base {
-        //½ÓÊÕÂ·ÓÉ²ÎÊıµÄ±äÁ¿
+        //æ¥æ”¶è·¯ç”±å‚æ•°çš„å˜é‡
         public static $RouteParams = array();
         public static $ModelPath = '/model';
 
-        //ÊÓÍ¼ÎÄ¼şÄ¿Â¼
+        //è§†å›¾æ–‡ä»¶ç›®å½•
         public static $ViewPath = '';
 
-        //ÊÓÍ¼ÀàĞÍ£º¿ÕÎª²»¼ÓÔØÊÓÍ¼£¬HTML¼ÓÔØÊÓÍ¼ÎÄ¼ş£¬JSONÊä³öJSON¸ñÊ½
+        //è§†å›¾ç±»å‹ï¼šç©ºä¸ºä¸åŠ è½½è§†å›¾ï¼ŒHTMLåŠ è½½è§†å›¾æ–‡ä»¶ï¼ŒJSONè¾“å‡ºJSONæ ¼å¼
         public static $ViewType = '';
-        //ÊÓÍ¼±äÁ¿
+        //è§†å›¾å˜é‡
         public static $ViewData = array();
-        //ÊÓÍ¼ÎÄ¼ş£¬½öÔÚ$viewType='html'Ê±ÓĞĞ§
+        //è§†å›¾æ–‡ä»¶ï¼Œä»…åœ¨$viewType='html'æ—¶æœ‰æ•ˆ
         public static $ViewFile = '';
 
-        //ÊÖ¶¯ÔØÈëHTMLÊÓÍ¼
+        //æ‰‹åŠ¨è½½å…¥HTMLè§†å›¾
         public static function ShowHTML($viewFile, $viewData = array()) {
             $viewFile = ROOT_PATH . '/view/' . $viewFile;
             if (file_exists($viewFile)) {
@@ -124,29 +125,29 @@ namespace QuarkPHP {
                 }
                 include($viewFile);
             } else {
-                echo 'ÊÓÍ¼ÎÄ¼ş' . $viewFile . '²»´æÔÚ';
+                echo 'è§†å›¾æ–‡ä»¶' . $viewFile . 'ä¸å­˜åœ¨';
                 exit();
             }
         }
 
-        //ÊÖ¶¯ÔØÈëJSONÊÓÍ¼
+        //æ‰‹åŠ¨è½½å…¥JSONè§†å›¾
         public static function ShowJSON($viewData = array()) {
             echo json_encode($viewData);
         }
 
-        //ÔØÈëÄ£ĞÍ
+        //è½½å…¥æ¨¡å‹
         public static function Model($quarkModelFile) {
             $quarkModelInfo = self::parsePath($quarkModelFile);
             $quarkModelFile = ROOT_PATH . '/model/' . $quarkModelInfo['path'] . '/' . $quarkModelInfo["class"] . '.php';
             if (file_exists($quarkModelFile)) {
                 require_once($quarkModelFile);
             } else {
-                echo 'Ä£ĞÍÎÄ¼ş' . $quarkModelFile . '²»´æÔÚ';
+                echo 'æ¨¡å‹æ–‡ä»¶' . $quarkModelFile . 'ä¸å­˜åœ¨';
                 exit();
             }
         }
 
-        //½âÎöÎÄ¼şÂ·¾¶ºÍÀàÃû
+        //è§£ææ–‡ä»¶è·¯å¾„å’Œç±»å
         private static function parsePath($path) {
             $pathinfo = pathinfo($path);
             $return["path"] = ($pathinfo["dirname"] == DIRECTORY_SEPARATOR || $pathinfo["dirname"] == '.') ? "" : $pathinfo["dirname"];
@@ -155,10 +156,10 @@ namespace QuarkPHP {
         }
     }
 
-    //ÈÕÖ¾¼ÇÂ¼Àà
+    //æ—¥å¿—è®°å½•ç±»
     class Logger {
 
-        //ÈÕÖ¾¼ÇÂ¼¼¶±ğ£¨Áô¿ÕÔò²»¼ÇÂ¼£©
+        //æ—¥å¿—è®°å½•çº§åˆ«ï¼ˆç•™ç©ºåˆ™ä¸è®°å½•ï¼‰
         public static $Level = '';
         public static $Path = '';
 
@@ -245,7 +246,7 @@ namespace QuarkPHP {
             }
         }
 
-        //Ğ´ÈÕÖ¾ÎÄ¼ş
+        //å†™æ—¥å¿—æ–‡ä»¶
         private static function output($info = array()) {
             $fp = fopen(ROOT_PATH . '/' . self::$Path . '/' . date('Y-m-d') . '.txt', 'a');
             flock($fp, LOCK_EX | LOCK_NB);
@@ -256,77 +257,77 @@ namespace QuarkPHP {
         }
     }
 
-    //Á¬½ÓÆ÷Àà
+    //è¿æ¥å™¨ç±»
     class Connect {
-        //MySQLÁ¬½Ó²ÎÊı
+        //MySQLè¿æ¥å‚æ•°
         public static $MySQLconfig = array(
             0 => array(
-                'host' => '127.0.0.1',      //Ö÷»ú
-                'port' => 3306,             //¶Ë¿Ú
-                'user' => 'root',           //ÕËºÅ
-                'pwd' => 'password',        //ÃÜÂë
-                'database' => 'test',       //Êı¾İ¿â
-                'charset' => 'utf-8',       //±àÂë
-                'timeout' => 10,            //³¬Ê±
-                'persistent' => false      //³Ö¾ÃÁ¬½Ó
+                'host' => '127.0.0.1',      //ä¸»æœº
+                'port' => 3306,             //ç«¯å£
+                'user' => 'root',           //è´¦å·
+                'pwd' => 'password',        //å¯†ç 
+                'database' => 'test',       //æ•°æ®åº“
+                'charset' => 'utf-8',       //ç¼–ç 
+                'timeout' => 10,            //è¶…æ—¶
+                'persistent' => false      //æŒä¹…è¿æ¥
             )
         );
 
-        //PostgreSQLÁ¬½Ó²ÎÊı
+        //PostgreSQLè¿æ¥å‚æ•°
         public static $PGSQLconfig = array(
             0 => array(
-                'host' => '127.0.0.1',      //Ö÷»ú
-                'port' => 5432,             //¶Ë¿Ú
-                'user' => 'postgres',       //ÕËºÅ
-                'pwd' => 'password',        //ÃÜÂë
-                'database' => 'test',       //Êı¾İ¿â
-                'timeout' => 10,            //³¬Ê±
-                'persistent' => false      //³Ö¾ÃÁ¬½Ó
+                'host' => '127.0.0.1',      //ä¸»æœº
+                'port' => 5432,             //ç«¯å£
+                'user' => 'postgres',       //è´¦å·
+                'pwd' => 'password',        //å¯†ç 
+                'database' => 'test',       //æ•°æ®åº“
+                'timeout' => 10,            //è¶…æ—¶
+                'persistent' => false      //æŒä¹…è¿æ¥
             )
         );
 
-        //RedisÁ¬½Ó²ÎÊı
+        //Redisè¿æ¥å‚æ•°
         public static $RedisConfig = array(
             0 => array(
-                'host' => '127.0.0.1',      //Ö÷»ú
-                'port' => 5432,             //¶Ë¿Ú
-                'pwd' => 'password',        //ÃÜÂë
-                'database' => 0,            //Êı¾İ¿âĞòºÅ
-                'timeout' => 10             //³¬Ê±
+                'host' => '127.0.0.1',      //ä¸»æœº
+                'port' => 5432,             //ç«¯å£
+                'pwd' => 'password',        //å¯†ç 
+                'database' => 0,            //æ•°æ®åº“åºå·
+                'timeout' => 10             //è¶…æ—¶
             )
         );
 
-        //MongoDBÁ¬½Ó²ÎÊı
+        //MongoDBè¿æ¥å‚æ•°
         public static $MongodbConfig = array(
             0 => array(
-                'host' => '127.0.0.1',      //Ö÷»ú
-                'port' => 5432,             //¶Ë¿Ú
-                'user' => 'user',           //ÕËºÅ
-                'pwd' => 'password',        //ÃÜÂë
-                'database' => ''           //Êı¾İ¿âĞòºÅ
+                'host' => '127.0.0.1',      //ä¸»æœº
+                'port' => 5432,             //ç«¯å£
+                'user' => 'user',           //è´¦å·
+                'pwd' => 'password',        //å¯†ç 
+                'database' => ''           //æ•°æ®åº“åºå·
             )
         );
 
-        //MemcachedÁ¬½Ó²ÎÊı
+        //Memcachedè¿æ¥å‚æ•°
         public static $MemcachedConfig = array(
             0 => array(
-                'host' => '127.0.0.1',      //Ö÷»ú
-                'port' => 5432,             //¶Ë¿Ú
-                'user' => 10                //³¬Ê±
+                'host' => '127.0.0.1',      //ä¸»æœº
+                'port' => 5432,             //ç«¯å£
+                'user' => 10                //è¶…æ—¶
             )
         );
 
-        //´´½¨MySQLÊı¾İ¿âÁ¬½Ó²¢·µ»ØÁ¬½Ó¶ÔÏó
+        //åˆ›å»ºMySQLæ•°æ®åº“è¿æ¥å¹¶è¿”å›è¿æ¥å¯¹è±¡
         public static function MySQL($configIndex = 0) {
             if (!class_exists('pdo')) {
-                Logger::Error('²»Ö§³ÖPDOÀ©Õ¹');
+                Logger::Error('ä¸æ”¯æŒPDOæ‰©å±•');
                 return false;
             }
 
             try {
                 $dsn = 'mysql:host=' . self::$MySQLconfig[$configIndex]['host'] . ';port=' . self::$MySQLconfig[$configIndex]['port'] . ';dbname=' . self::$MySQLconfig[$configIndex]['database'] . ';charset=' . self::$MySQLconfig[$configIndex]['charset'];
                 $obj = new PDO($dsn, self::$MySQLconfig[$configIndex]['user'], self::$MySQLconfig[$configIndex]['pwd'], array(PDO::ATTR_TIMEOUT => self::$MySQLconfig[$configIndex]['timeout'], PDO::ATTR_PERSISTENT => self::$MySQLconfig[$configIndex]['persistent']));
-                //¹Ø±Õ±¾µØ±äÁ¿Öµ´¦Àí£¬ÓÉmysqlÀ´×ª»»°ó¶¨²ÎÊıµÄ±äÁ¿ÖµÀàĞÍ£¬·ÀÖ¹SQL×¢Èë
+                //å…³é—­æœ¬åœ°å˜é‡å€¼å¤„ç†ï¼Œç”±mysqlæ¥è½¬æ¢ç»‘å®šå‚æ•°çš„å˜é‡å€¼ç±»å‹ï¼Œé˜²æ­¢SQLæ³¨å…¥
                 $obj->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
                 return $obj;
             } catch (PDOException $e) {
@@ -335,17 +336,17 @@ namespace QuarkPHP {
             }
         }
 
-        //´´½¨PostgreSQLÊı¾İ¿âÁ¬½Ó²¢·µ»ØÁ¬½Ó¶ÔÏó
+        //åˆ›å»ºPostgreSQLæ•°æ®åº“è¿æ¥å¹¶è¿”å›è¿æ¥å¯¹è±¡
         public static function PGSQL($configIndex = 0) {
             if (!class_exists('pdo')) {
-                Logger::Error('PDO×é¼ş²»´æÔÚ');
+                Logger::Error('PDOç»„ä»¶ä¸å­˜åœ¨');
                 return false;
             }
 
             try {
                 $dsn = 'pgsql:host=' . self::$PGSQLconfig[$configIndex]['host'] . ';port=' . self::$PGSQLconfig[$configIndex]['port'] . ';dbname=' . self::$PGSQLconfig[$configIndex]['database'];
                 $obj = new PDO($dsn, self::$PGSQLconfig[$configIndex]['user'], self::$PGSQLconfig[$configIndex]['pwd'], array(PDO::ATTR_TIMEOUT => self::$PGSQLconfig[$configIndex]['timeout'], PDO::ATTR_PERSISTENT => self::$PGSQLconfig[$configIndex]['persistent']));
-                //¹Ø±Õ±¾µØ±äÁ¿Öµ´¦Àí£¬ÓÉmysqlÀ´×ª»»°ó¶¨²ÎÊıµÄ±äÁ¿ÖµÀàĞÍ£¬·ÀÖ¹SQL×¢Èë
+                //å…³é—­æœ¬åœ°å˜é‡å€¼å¤„ç†ï¼Œç”±mysqlæ¥è½¬æ¢ç»‘å®šå‚æ•°çš„å˜é‡å€¼ç±»å‹ï¼Œé˜²æ­¢SQLæ³¨å…¥
                 $obj->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
                 return $obj;
             } catch (PDOException $e) {
@@ -354,10 +355,10 @@ namespace QuarkPHP {
             }
         }
 
-        //´´½¨RedisÁ¬½Ó²¢·µ»ØÁ¬½Ó¶ÔÏó
+        //åˆ›å»ºRedisè¿æ¥å¹¶è¿”å›è¿æ¥å¯¹è±¡
         public static function Redis($configIndex = 0) {
             if (!class_exists('Redis')) {
-                Logger::Error('²»Ö§³ÖRedisÀ©Õ¹');
+                Logger::Error('ä¸æ”¯æŒRedisæ‰©å±•');
                 return false;
             }
 
@@ -372,15 +373,15 @@ namespace QuarkPHP {
                 }
                 return $obj;
             } else {
-                Logger::Error('ÎŞ·¨Á¬½ÓRedis·şÎñÆ÷' . self::$RedisConfig[$configIndex]['host']);
+                Logger::Error('æ— æ³•è¿æ¥RedisæœåŠ¡å™¨' . self::$RedisConfig[$configIndex]['host']);
                 return false;
             }
         }
 
-        //´´½¨MongodbÁ¬½Ó²¢·µ»ØÁ¬½Ó¶ÔÏó
+        //åˆ›å»ºMongodbè¿æ¥å¹¶è¿”å›è¿æ¥å¯¹è±¡
         public static function Mongodb($configIndex = 0) {
             if (!class_exists('Mongo')) {
-                Logger::Error('²»Ö§³ÖMongoÀ©Õ¹');
+                Logger::Error('ä¸æ”¯æŒMongoæ‰©å±•');
                 return false;
             }
 
@@ -397,10 +398,10 @@ namespace QuarkPHP {
 
         }
 
-        //´´½¨MemcachedÁ¬½Ó²¢·µ»ØÁ¬½Ó¶ÔÏó
+        //åˆ›å»ºMemcachedè¿æ¥å¹¶è¿”å›è¿æ¥å¯¹è±¡
         public static function Memcached($configIndex = 0) {
             if (!class_exists('memcache')) {
-                Logger::Error('²»Ö§³ÖmemcacheÀ©Õ¹');
+                Logger::Error('ä¸æ”¯æŒmemcacheæ‰©å±•');
                 return false;
             }
 
@@ -409,139 +410,139 @@ namespace QuarkPHP {
             if ($obj->connect(self::$RedisConfig[$configIndex]['host'], self::$RedisConfig[$configIndex]['port'], self::$RedisConfig[$configIndex]['timeout'])) {
                 return $obj;
             } else {
-                Logger::Error('ÎŞ·¨Á¬½ÓMmecached·şÎñÆ÷' . self::$MemcachedConfig[$configIndex]['host']);
+                Logger::Error('æ— æ³•è¿æ¥MmecachedæœåŠ¡å™¨' . self::$MemcachedConfig[$configIndex]['host']);
                 return false;
             }
         }
     }
 
     class Verifycode {
-        //-------------- ÑéÖ¤Âë»æÖÆ²ÎÊı -------------------
-        public static $ImageWidth = 85; //Í¼Æ¬¿í¶È
-        public static $ImageHeight = 25; //Í¼Æ¬¸ß¶È
-        public static $ImageBgcolor = array(255, 255, 255); //Í¼Æ¬µÄ±³¾°ÑÕÉ«
-        public static $StrCount = 4; //ÏÔÊ¾×Ö·ûÊıÁ¿
-        public static $FontFace = '/data/www/simhei.ttf'; //×ÖÌåÎÄ¼şµÄ¾ø¶ÔÂ·¾¶
-        public static $FontSize = 18; //ÎÄ×Ö´óĞ¡(ÏñËØ)
-        public static $FontRotate = 30; //ÎÄ×ÖĞı×ª½Ç¶È(0-180)
-        public static $FontSpace = 3; //ÎÄ×Ö¼ä¾à
-        public static $DisturbLine = 15; //¸ÉÈÅÇúÏßÊıÁ¿
-        public static $DisturbPixel = 100; //¸ÉÈÅÔëµãÊıÁ¿
-        public static $VarName = 'vcode';   //ÑéÖ¤Âësession±äÁ¿µÄÃû³Æ
-        //ÔÊĞí³öÏÖµÄ×Ö·û£¬¿ÉÒÔÊÇºº×Ö
+        //-------------- éªŒè¯ç ç»˜åˆ¶å‚æ•° -------------------
+        public static $ImageWidth = 85; //å›¾ç‰‡å®½åº¦
+        public static $ImageHeight = 25; //å›¾ç‰‡é«˜åº¦
+        public static $ImageBgcolor = array(255, 255, 255); //å›¾ç‰‡çš„èƒŒæ™¯é¢œè‰²
+        public static $StrCount = 4; //æ˜¾ç¤ºå­—ç¬¦æ•°é‡
+        public static $FontFace = '/data/www/simhei.ttf'; //å­—ä½“æ–‡ä»¶çš„ç»å¯¹è·¯å¾„
+        public static $FontSize = 18; //æ–‡å­—å¤§å°(åƒç´ )
+        public static $FontRotate = 30; //æ–‡å­—æ—‹è½¬è§’åº¦(0-180)
+        public static $FontSpace = 3; //æ–‡å­—é—´è·
+        public static $DisturbLine = 15; //å¹²æ‰°æ›²çº¿æ•°é‡
+        public static $DisturbPixel = 100; //å¹²æ‰°å™ªç‚¹æ•°é‡
+        public static $VarName = 'vcode';   //éªŒè¯ç sessionå˜é‡çš„åç§°
+        //å…è®¸å‡ºç°çš„å­—ç¬¦ï¼Œå¯ä»¥æ˜¯æ±‰å­—
         public static $AllowStr = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'P', 'R', 'S', 'U', 'W', 'X', 'Y', 'Z');
 
         public static function show() {
-            //»º´æ¿ØÖÆ
+            //ç¼“å­˜æ§åˆ¶
             header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
             header('Cache-Control: no-cache, must-revalidate');
             header('Pragma: no-cache');
             header('Content-type: image/jpeg');
 
             $vcode = '';
-            //°´²ÎÊıÖĞµÄ¿í¸ßÀ´´´½¨Ò»¸öÍ¼Ïñ
+            //æŒ‰å‚æ•°ä¸­çš„å®½é«˜æ¥åˆ›å»ºä¸€ä¸ªå›¾åƒ
             $image = imagecreatetruecolor(self::$ImageWidth, self::$ImageHeight);
-            //¶¨ÒåÍ¼ÏñµÄ±³¾°É«
+            //å®šä¹‰å›¾åƒçš„èƒŒæ™¯è‰²
             $bgColor = imagecolorallocate($image, self::$ImageBgcolor[0], self::$ImageBgcolor[1], self::$ImageBgcolor[2]);
-            //°´¸ß¿í»æÖÆÒ»¸ö¾ØĞÎ
+            //æŒ‰é«˜å®½ç»˜åˆ¶ä¸€ä¸ªçŸ©å½¢
             imagerectangle($image, 1, 1, self::$ImageWidth, self::$ImageHeight, $bgColor);
-            //Ìî³ä±³¾°ÑÕÉ«
+            //å¡«å……èƒŒæ™¯é¢œè‰²
             imagefill($image, 0, 0, $bgColor);
 
-            //Ñ­»·»æÖÆ¸ÉÈÅÇúÏß
+            //å¾ªç¯ç»˜åˆ¶å¹²æ‰°æ›²çº¿
             for ($i = 0; $i < self::$DisturbLine; $i++) {
-                //Ëæ»ú¶¨ÒåÏßÌõÑÕÉ«
+                //éšæœºå®šä¹‰çº¿æ¡é¢œè‰²
                 $lineColor = imagecolorallocate($image, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
-                //Ëæ»úÎ»ÖÃ£¬½Ç¶ÈºÍ»¡¶ÈÀ´»æÖÆÇúÏß
+                //éšæœºä½ç½®ï¼Œè§’åº¦å’Œå¼§åº¦æ¥ç»˜åˆ¶æ›²çº¿
                 imagearc($image, mt_rand(-10, self::$ImageWidth), mt_rand(-10, self::$ImageHeight), mt_rand(30, 300), mt_rand(20, 200), 55, 44, $lineColor);
             }
 
-            //Ñ­»·»æÖÆ¸ÉÈÅÔëµã
+            //å¾ªç¯ç»˜åˆ¶å¹²æ‰°å™ªç‚¹
             for ($i = 0; $i < self::$DisturbPixel; $i++) {
-                //¶¨ÒåËæ»úÔëµãÑÕÉ«
+                //å®šä¹‰éšæœºå™ªç‚¹é¢œè‰²
                 $pixelColor = imagecolorallocate($image, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
-                //»æÖÆÔëµã
+                //ç»˜åˆ¶å™ªç‚¹
                 imagesetpixel($image, mt_rand(0, self::$ImageWidth), mt_rand(0, self::$ImageHeight), $pixelColor);
             }
 
-            //´ÓÔ¤¶¨Òå×Ö·ûÊı×éÖĞËæ»ú³éÈ¡³öÖ¸¶¨ÊıÁ¿µÄ¼üÃû£¬²¢¸´ÖÆµ½Ò»¸öĞÂµÄÊı×é
+            //ä»é¢„å®šä¹‰å­—ç¬¦æ•°ç»„ä¸­éšæœºæŠ½å–å‡ºæŒ‡å®šæ•°é‡çš„é”®åï¼Œå¹¶å¤åˆ¶åˆ°ä¸€ä¸ªæ–°çš„æ•°ç»„
             $randKey = array_rand(self::$AllowStr, self::$StrCount);
 
-            //¼ÆËãÎÄ×ÖµÄ¶¥¾à
+            //è®¡ç®—æ–‡å­—çš„é¡¶è·
             $topSpace = self::$ImageHeight - ((self::$ImageHeight - self::$FontSize) / 2);
             $i = 0;
-            //Ñ­»·»æÖÆ×Ö·û
+            //å¾ªç¯ç»˜åˆ¶å­—ç¬¦
             foreach ($randKey as $key) {
                 $i++;
-                //Æ´½Ó×Ö·û
+                //æ‹¼æ¥å­—ç¬¦
                 $vcode .= self::$AllowStr[$key];
-                //Ëæ»ú¶¨Òå×Ö·ûÑÕÉ«
+                //éšæœºå®šä¹‰å­—ç¬¦é¢œè‰²
                 $fontColor = imagecolorallocate($image, mt_rand(0, 170), mt_rand(0, 170), mt_rand(0, 170));
-                //Ğ´ÈëÎÄ×Ö£¨Í¼Ïñ£¬ÎÄ×Ö´óĞ¡£¬Ğı×ª½Ç¶È£¬ÎÄ×Ö¼ä¾à£¬ÎÄ×Ö¶¥¾à£¬ÎÄ×ÖÑÕÉ«£¬×ÖÌå£¬×Ö·û£©
+                //å†™å…¥æ–‡å­—ï¼ˆå›¾åƒï¼Œæ–‡å­—å¤§å°ï¼Œæ—‹è½¬è§’åº¦ï¼Œæ–‡å­—é—´è·ï¼Œæ–‡å­—é¡¶è·ï¼Œæ–‡å­—é¢œè‰²ï¼Œå­—ä½“ï¼Œå­—ç¬¦ï¼‰
                 imagettftext($image, self::$FontSize, mt_rand(-self::$FontRotate, self::$FontRotate), (self::$FontSize + self::$FontSpace) * ($i - 0.8), $topSpace, $fontColor, self::$FontFace, self::$AllowStr[$key]);
             }
-            //Ğ´Èësession
+            //å†™å…¥session
             $_SESSION[self::$VarName] = $vcode;
-            //Êä³öÍ¼Ïñ
+            //è¾“å‡ºå›¾åƒ
             imagejpeg($image);
-            //ÊÍ·ÅÄÚ´æ
+            //é‡Šæ”¾å†…å­˜
             imagedestroy($image);
         }
     }
 
     class Upload {
-        //ÉÏ´«²ÎÊı
+        //ä¸Šä¼ å‚æ•°
         static public $option = array(
-            'inputName' => '',        //ÉÏ´«¿Ø¼şµÄnameÖµ
-            'allowMIME' => array(),    //ÔÊĞíÉÏ´«µÄÎÄ¼şMIMEÖµ
-            'allowSize' => 1024,        //ÔÊĞíÉÏ´«µÄÎÄ¼ş´óĞ¡£¨KB£©
-            'convertName' => 1,        //ÊÇ·ñ×ª»»ÎÄ¼şÃû×ÖÄ¸´óĞ¡Ğ´£¬[0²»×ª»»/1Ğ¡Ğ´/2´óĞ´]
-            'savePath' => '',            //ÉÏ´«ºó±£´æµÄ¾ø¶ÔÂ·¾¶£¬»ùÓÚ ROOT_PATH ³£Á¿
-            'saveName' => '',            //ÉÏ´«ºó±£´æµÄÎÄ¼şÃû£¬²»º¬ºó×ºÃû
+            'inputName' => '',        //ä¸Šä¼ æ§ä»¶çš„nameå€¼
+            'allowMIME' => array(),    //å…è®¸ä¸Šä¼ çš„æ–‡ä»¶MIMEå€¼
+            'allowSize' => 1024,        //å…è®¸ä¸Šä¼ çš„æ–‡ä»¶å¤§å°ï¼ˆKBï¼‰
+            'convertName' => 1,        //æ˜¯å¦è½¬æ¢æ–‡ä»¶åå­—æ¯å¤§å°å†™ï¼Œ[0ä¸è½¬æ¢/1å°å†™/2å¤§å†™]
+            'savePath' => '',            //ä¸Šä¼ åä¿å­˜çš„ç»å¯¹è·¯å¾„ï¼ŒåŸºäº ROOT_PATH å¸¸é‡
+            'saveName' => '',            //ä¸Šä¼ åä¿å­˜çš„æ–‡ä»¶åï¼Œä¸å«åç¼€å
         );
 
-        //Ö´ĞĞÉÏ´«
+        //æ‰§è¡Œä¸Šä¼ 
         static function start() {
-            //Èç¹ûÃ»ÓĞ¶¨ÒåÎÄ¼ş´óĞ¡ÏŞÖÃ
+            //å¦‚æœæ²¡æœ‰å®šä¹‰æ–‡ä»¶å¤§å°é™ç½®
             if (self::$option['allowSize'] == 0) {
-                return 'allowSizeÊôĞÔÖµÎŞĞ§(' . self::$option['allowSize'] . ')';
+                return 'allowSizeå±æ€§å€¼æ— æ•ˆ(' . self::$option['allowSize'] . ')';
             }
-            //Èç¹ûÃ»ÓĞ¶¨Òå±£´æÎÄ¼şÃû
+            //å¦‚æœæ²¡æœ‰å®šä¹‰ä¿å­˜æ–‡ä»¶å
             if (self::$option['saveName'] == '') {
-                return 'saveNameÊôĞÔÖµÎŞĞ§(' . self::$option['saveName'] . ')';
+                return 'saveNameå±æ€§å€¼æ— æ•ˆ(' . self::$option['saveName'] . ')';
             }
-            //Èç¹ûÃ»ÓĞÉÏ´«Êı¾İ
+            //å¦‚æœæ²¡æœ‰ä¸Šä¼ æ•°æ®
             if (!isset($_FILES[self::$option['inputName']])) {
-                return 'ÇëÑ¡ÔñÒªÉÏ´«µÄÎÄ¼ş';
+                return 'è¯·é€‰æ‹©è¦ä¸Šä¼ çš„æ–‡ä»¶';
             }
 
-            //»ñÈ¡Ô­Ê¼ÎÄ¼şÃû
+            //è·å–åŸå§‹æ–‡ä»¶å
             $srcName = $_FILES[self::$option['inputName']]['name'];
-            //»ñÈ¡Ô­Ê¼ÎÄ¼şÀ©Õ¹Ãû
+            //è·å–åŸå§‹æ–‡ä»¶æ‰©å±•å
             $srcSuffix = pathinfo($srcName, PATHINFO_EXTENSION);
-            //»ñÈ¡Ô­Ê¼ÎÄ¼ş´óĞ¡
+            //è·å–åŸå§‹æ–‡ä»¶å¤§å°
             $srcSize = $_FILES[self::$option['inputName']]['size'];
-            //»ñÈ¡Ô­Ê¼ÎÄ¼şMIMEÖµ
+            //è·å–åŸå§‹æ–‡ä»¶MIMEå€¼
             $srcMIME = $_FILES[self::$option['inputName']]['type'];
 
-            //¼ì²éÎÄ¼ş´óĞ¡
+            //æ£€æŸ¥æ–‡ä»¶å¤§å°
             if (self::$option['allowSize'] < $srcSize) {
-                return 'ÎÄ¼ş´óĞ¡³¬³öÏŞÖÆ(' . $srcSize . ')';
+                return 'æ–‡ä»¶å¤§å°è¶…å‡ºé™åˆ¶(' . $srcSize . ')';
             }
-            //¼ì²éÎÄ¼şMIMEÖµ
+            //æ£€æŸ¥æ–‡ä»¶MIMEå€¼
             if (empty(self::$option['allowMIME']) == false && in_array($srcMIME, self::$option['allowMIME'], true) == false) {
-                return '²»ÔÊĞíÉÏ´«¸ÃÀàĞÍµÄÎÄ¼ş(' . $srcMIME . ')';
+                return 'ä¸å…è®¸ä¸Šä¼ è¯¥ç±»å‹çš„æ–‡ä»¶(' . $srcMIME . ')';
             }
 
-            //Èç¹ûÄ¿Â¼²»´æÔÚ
+            //å¦‚æœç›®å½•ä¸å­˜åœ¨
             if (!is_dir(self::$option['savePath'])) {
-                //´´½¨Ä¿Â¼
+                //åˆ›å»ºç›®å½•
                 if (!mkdir(self::$option['savePath'])) {
-                    return 'ÎŞ·¨´´½¨ÎÄ¼ş±£´æÄ¿Â¼(' . self::$option['savePath'] . ')';
+                    return 'æ— æ³•åˆ›å»ºæ–‡ä»¶ä¿å­˜ç›®å½•(' . self::$option['savePath'] . ')';
                 }
             }
 
-            //×ª»»ÎÄ¼şÃû´óĞ¡Ğ´
+            //è½¬æ¢æ–‡ä»¶åå¤§å°å†™
             switch (self::$option['convertName']) {
                 case 1:
                     self::$option['saveName'] = strtolower(self::$option['saveName']);
@@ -553,35 +554,35 @@ namespace QuarkPHP {
                     break;
             }
 
-            //»ñÈ¡ÉÏ´«ºóµÄÁÙÊ±ÎÄ¼şÃû
+            //è·å–ä¸Šä¼ åçš„ä¸´æ—¶æ–‡ä»¶å
             $tmpName = $_FILES[self::$option['inputName']]['tmp_name'];
-            //±£´æÎÄ¼ş
+            //ä¿å­˜æ–‡ä»¶
             if (!move_uploaded_file($tmpName, self::$option['savePath'] . '/' . self::$option['saveName'] . '.' . $srcSuffix)) {
-                return 'ÎÄ¼şÉÏ´«Ê§Ğ§£¬Çë¼ì²éÄ¿Â¼È¨ÏŞ';
+                return 'æ–‡ä»¶ä¸Šä¼ å¤±æ•ˆï¼Œè¯·æ£€æŸ¥ç›®å½•æƒé™';
             }
 
-            //»ñÈ¡ÉÏ´«½á¹û
+            //è·å–ä¸Šä¼ ç»“æœ
             $filesError = $_FILES[self::$option['inputName']]['error'];
 
-            //ÅĞ¶ÏÉÏ´«½á¹û
+            //åˆ¤æ–­ä¸Šä¼ ç»“æœ
             switch ($filesError) {
                 case 0:
                     return self::$option['saveName'] . '.' . $srcSuffix;
                     break;
                 case 1:
-                    return 'ÎÄ¼ş´óĞ¡(' . $srcSize . ')³¬³öPHPµÄÏŞÖÆ';
+                    return 'æ–‡ä»¶å¤§å°(' . $srcSize . ')è¶…å‡ºPHPçš„é™åˆ¶';
                     break;
                 case 2:
-                    return 'ÎÄ¼ş´óĞ¡³¬³öHTML±íµ¥ÖĞÖ¸¶¨µÄÏŞÖÆ';
+                    return 'æ–‡ä»¶å¤§å°è¶…å‡ºHTMLè¡¨å•ä¸­æŒ‡å®šçš„é™åˆ¶';
                     break;
                 case 3:
-                    return 'ÎÄ¼şÎ´ÍêÕûÉÏ´«';
+                    return 'æ–‡ä»¶æœªå®Œæ•´ä¸Šä¼ ';
                     break;
                 case 4:
-                    return 'ÎÄ¼şÉÏ´«Ê§°Ü';
+                    return 'æ–‡ä»¶ä¸Šä¼ å¤±è´¥';
                     break;
                 case 5:
-                    return 'ÉÏ´«ÎÄ¼şµÄ´óĞ¡Îª0';
+                    return 'ä¸Šä¼ æ–‡ä»¶çš„å¤§å°ä¸º0';
                     break;
             }
             return true;
