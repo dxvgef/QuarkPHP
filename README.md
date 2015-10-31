@@ -6,8 +6,7 @@
 * 控制器函数return后自动加载视图（可在控制器内启用或禁用）
 * HTML静态文件缓存
 * Logger日志文件记录器
-* MySQL连接器(PDO扩展)
-* PostgreSQL连接器（PDO扩展）
+* 数据库连接器(基于PDO扩展，支持MySQL/PostgreSQL)
 * Redis连接器
 
 
