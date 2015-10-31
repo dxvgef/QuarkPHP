@@ -1,5 +1,5 @@
 # QuarkPHP
-“QuarkPHP”是一个使用PHP开发的微型PHP框架，以“灵活定制、随处可用”为开发理念。没有包含URI路由，但可以轻松与 [nikic/FastRoute](https://github.com/nikic/FastRoute) 或 [c9s/Pux](https://github.com/c9s/Pux) 等成熟的路由程序整合。
+PHP开发的微型框架，以“灵活定制、随处可用”为开发理念。没有包含URI路由，但可以轻松与 [nikic/FastRoute](https://github.com/nikic/FastRoute) 或 [c9s/Pux](https://github.com/c9s/Pux) 等成熟的路由程序整合。
 
 ## 功能列表
 * MVC结构
