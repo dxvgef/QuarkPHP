@@ -1,7 +1,14 @@
 # QuarkPHP
 基于 PHP 5.3+ 开发的轻型框架，以“灵活定制、随处可用”为开发理念。没有包含URI路由，但可以轻松与 [nikic/FastRoute](https://github.com/nikic/FastRoute) 或 [c9s/Pux](https://github.com/c9s/Pux) 等成熟的路由程序整合。
 
-框架结构由以下五个类实现不同功能，可根据项目的功能需求删减不需要的类，或按自己的意愿增加、修改功能。
+## 安装方法
+推荐使用composer在所需项目的路径里使用以下命令安装，使用[composer中国全量镜像](http://pkg.phpcomposer.com/)可加快安装速度
+    composer require dxvgef/quarkphp
+	
+或者下载本库src目录中的quarkphp.php源码文件并require该文件
+
+##功能简介
+框架结构由以下五个类实现不同功能，可在遵守BSD-3-Clause协议的情况下，根据项目的功能需求删减不需要的类，或增加、修改功能。
 类都由静态方法组成，可通过\命名空间\类名::方法名 的方式直接访问，Base类也可以被控制器类继承后使用self访问。
 
 #### Dispatcher 调度器
@@ -61,8 +68,20 @@ switch ($routeInfo[0]) {
         break;
     case \FastRoute\Dispatcher::FOUND:
 
-        //载入QuarkPHP文件
+        //如果使用composer require命令安装QuarkPHP，则不需要此行
         require ROOT_PATH . '/quarkphp.php';
+
+
+        //设置QuarkPHP运行参数
+        Dispatcher::$htmlCache = false;  //是否开启HTML缓存
+        Dispatcher::$htmlCachePath = '/htmlcache';  //HTML缓存路径
+        Dispatcher::$controllerPath = '/controller';  //控制器文件路径
+        Base::$ModelPath = '/model';  //HTML缓存路径
+        Base::$ViewPath = '/view';  //HTML缓存路径
+        Logger::$Level = 'warn';   //日志记录级别
+        Logger::$Path = '/log';   //日志文件目录
+		//更多参数配置请查看源码中各个class里的注释
+
 
         //执行 QuarkPHP 调度器并传入(控制器名,路由参数)
         \QuarkPHP\Dispatcher::Run($routeInfo[1], $routeInfo[2]);
@@ -71,4 +90,3 @@ switch ($routeInfo[0]) {
 }
 ?>
 ```
-#### 与 [c9s/Pux](https://github.com/c9s/Pux) 路由程序整合示例：
