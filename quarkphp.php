@@ -1,14 +1,14 @@
 <?php
 namespace QuarkPHP {
 
-    //设置QuarkPHP运行参数
-    Dispatcher::$htmlCache = false;  //开启HTML缓存
-    Dispatcher::$htmlCachePath = '/htmlcache';  //HTML缓存路径
-    Dispatcher::$controllerPath = '/controller';  //控制器文件路径
-    Base::$ModelPath = '/model';  //HTML缓存路径
-    Base::$ViewPath = '/view';  //HTML缓存路径
-    Logger::$Level = 'warn';   //日志记录级别
-    Logger::$Path = '/log';   //日志文件目录
+//    //设置QuarkPHP运行参数
+//    Dispatcher::$htmlCache = false;  //开启HTML缓存
+//    Dispatcher::$htmlCachePath = '/htmlcache';  //HTML缓存路径
+//    Dispatcher::$controllerPath = '/controller';  //控制器文件路径
+//    Base::$ModelPath = '/model';  //HTML缓存路径
+//    Base::$ViewPath = '/view';  //HTML缓存路径
+//    Logger::$Level = 'warn';   //日志记录级别
+//    Logger::$Path = '/log';   //日志文件目录
 
     //调度器
     class Dispatcher {
