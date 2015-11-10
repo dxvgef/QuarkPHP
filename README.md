@@ -3,22 +3,23 @@
 
 ## 安装方法
 推荐使用composer在所需项目的路径里使用以下命令安装，使用[composer中国全量镜像](http://pkg.phpcomposer.com/)可加快安装速度
-    composer require dxvgef/quarkphp
+
+	composer require dxvgef/quarkphp
 	
 或者下载本库src目录中的quarkphp.php源码文件并require该文件
 
 ##功能简介
-框架结构由以下五个类实现不同功能，可在遵守BSD-3-Clause协议的情况下，根据项目的功能需求删减不需要的类，或增加、修改功能。
-类都由静态方法组成，可通过\命名空间\类名::方法名 的方式直接访问，Base类也可以被控制器类继承后使用self访问。
+框架由以下五个类实现不同功能，可在遵守[BSD-3-Clause](https://github.com/dxvgef/QuarkPHP/blob/master/LICENSE)协议的情况下，根据项目的功能需求删减不需要的类，或增加修改功能。
 
 #### Dispatcher 调度器
 * 供URI路由调用
 * 在控制器函数return后自动加载视图（可在控制器内启用或禁用）
 * HTML静态文件缓存
+
 #### Base 控制器基类
-* 可被控制器类继承后以self::方式访问各方法
+* 可选择供控制器类继承
 * 获取URI路由参数
-* 手动HTML/JSON视图
+* 手动加载HTML/JSON视图
 * 加载模型
 
 #### Logger 日志文件记录器
@@ -33,7 +34,7 @@
 * 使用Memcache扩展连接到Memcached
 * 未封装任何CURD，连接器仅供建立连接并返回连接对象
 
-#### Verifycode 图形验证码
+#### VerifyCode 图形验证码
 * 生成包含中文在内的自定义字符的图形验证码
 * 可定义验证码图形的尺寸、背景色、前景色、验证码字符数、字体、字体大小、干扰线、干扰噪点、字间距、旋转角度、验证码变量名等参数
 
@@ -43,7 +44,7 @@
 
 
 
-#### 与 [nikic/FastRoute](https://github.com/nikic/FastRoute) 路由程序整合示例：
+## 与 [nikic/FastRoute](https://github.com/nikic/FastRoute) 路由程序整合示例：
 ```PHP
 <?php
 define('ROOT_PATH', dirname($_SERVER['DOCUMENT_ROOT']));
