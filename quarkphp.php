@@ -1,6 +1,9 @@
 <?php
 namespace QuarkPHP {
 
+//版本号
+//public static $Version = '1.0.1';
+
 //    //设置QuarkPHP运行参数
 //    Dispatcher::$htmlCache = false;  //开启HTML缓存
 //    Dispatcher::$htmlCachePath = '/htmlcache';  //HTML缓存路径
