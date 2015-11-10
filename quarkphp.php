@@ -1,5 +1,8 @@
 <?php
 namespace QuarkPHP {
+	use \PDO;
+	use \PDOException;
+
 	/*
 	* QuarkPHP运行参数设置
 	* \QuarkPHP\Dispatcher::$htmlCache = false;  //开启HTML缓存
@@ -13,7 +16,7 @@ namespace QuarkPHP {
 	*/
 
 	//版本号
-	//public static $Version = '1.0.2';
+	//public static $Version = '1.0.3';
 
     //调度器
     class Dispatcher {
