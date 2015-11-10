@@ -1,17 +1,20 @@
 <?php
-/*
-* QuarkPHP运行参数设置
-* \QuarkPHP\Dispatcher::$htmlCache = false;  //开启HTML缓存
-* \QuarkPHP\Dispatcher::$htmlCachePath = '/htmlcache';  //HTML缓存路径
-* \QuarkPHP\Dispatcher::$controllerPath = '/controller';  //控制器文件路径
-* \QuarkPHP\Base::$ModelPath = '/model';  //HTML缓存路径
-* \QuarkPHP\Base::$ViewPath = '/view';  //HTML缓存路径
-* \QuarkPHP\Logger::$Level = 'warn';   //日志记录级别
-* \QuarkPHP\Logger::$Path = '/log';   //日志文件目录
-* 更多配置参数请查看各类中的注释
-*/
-
 namespace QuarkPHP {
+	/*
+	* QuarkPHP运行参数设置
+	* \QuarkPHP\Dispatcher::$htmlCache = false;  //开启HTML缓存
+	* \QuarkPHP\Dispatcher::$htmlCachePath = '/htmlcache';  //HTML缓存路径
+	* \QuarkPHP\Dispatcher::$controllerPath = '/controller';  //控制器文件路径
+	* \QuarkPHP\Base::$ModelPath = '/model';  //HTML缓存路径
+	* \QuarkPHP\Base::$ViewPath = '/view';  //HTML缓存路径
+	* \QuarkPHP\Logger::$Level = 'warn';   //日志记录级别
+	* \QuarkPHP\Logger::$Path = '/log';   //日志文件目录
+	* 更多配置参数请查看各类中的注释
+	*/
+
+	//版本号
+	//public static $Version = '1.0.1';
+
     //调度器
     class Dispatcher {
         public static $htmlCache = false;
