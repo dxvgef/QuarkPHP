@@ -13,7 +13,7 @@ namespace QuarkPHP {
 	*/
 
 	//版本号
-	//public static $Version = '1.0.1';
+	//public static $Version = '1.0.2';
 
     //调度器
     class Dispatcher {
@@ -393,7 +393,7 @@ namespace QuarkPHP {
             $conn = new Mongo($dsn);
 
             try {
-                $obj = $conn->self::$MongodbConfig[$configIndex]['database'];
+                $obj = $conn->{self::$MongodbConfig[$configIndex]['database']};
                 return $obj;
             } catch (MongoConnectionException $e) {
                 Logger::Error($e->getMessage());
