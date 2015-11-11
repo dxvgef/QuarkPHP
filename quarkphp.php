@@ -125,22 +125,24 @@ namespace QuarkPHP {
 
         //手动载入HTML视图
         public static function ShowHTML($viewFile, $viewData = array()) {
-            $viewFile = ROOT_PATH . '/view/' . $viewFile;
-            if (file_exists($viewFile)) {
-                if (!empty($viewData)) {
-                    extract($viewData, EXTR_OVERWRITE);
-                }
-                include($viewFile);
-            } else {
-                echo '视图文件' . $viewFile . '不存在';
-                exit();
-            }
+			$viewFile = ROOT_PATH . '/view/' . $viewFile;
+			$data = array_merge($viewData, Base::$ViewData);
+			if (file_exists($viewFile)) {
+				if (!empty($data)) {
+					extract($data, EXTR_OVERWRITE);
+				}
+				include($viewFile);
+			} else {
+				echo '视图文件' . $viewFile . '不存在';
+				exit();
+			}
         }
 
         //手动载入JSON视图
         public static function ShowJSON($viewData = array()) {
 			header('Content-type: text/json; charset=utf-8');
-            echo json_encode($viewData);
+			$data = array_merge($viewData, Base::$ViewData);
+			echo json_encode($data);
         }
 
         //载入模型
