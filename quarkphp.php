@@ -15,8 +15,6 @@ namespace QuarkPHP {
 	* 更多配置参数请查看各类中的注释
 	*/
 
-	//版本号
-	//public static $Version = '1.0.5';
 
     //调度器
     class Dispatcher {
