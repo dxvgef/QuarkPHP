@@ -157,6 +157,27 @@ namespace QuarkPHP {
             }
         }
 
+		//重定向
+		public static function Redir($url = '') {
+			header('Location: ' . $url);
+			exit();
+		}
+
+		//输出信息并中断运行
+		public static function Abort($code = 404) {
+			switch ($code) {
+				case 404:
+					header("HTTP/1.1 404 Not Found");
+					header("Status: 404 Not Found");
+					break;
+				case 500:
+					header("HTTP/1.1 500 Internal Server Error");
+					header("Status: 500 Internal Server Error");
+					break;
+			}
+			exit();
+		}
+
         //解析文件路径和类名
         private static function parsePath($path) {
             $pathinfo = pathinfo($path);
