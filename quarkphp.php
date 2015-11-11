@@ -61,6 +61,7 @@ namespace QuarkPHP {
                     }
                     break;
                 case 'json';
+					header('Content-type: text/json; charset=utf-8');
 					echo json_encode(Base::$ViewData);
 					return;
                     break;
@@ -138,6 +139,7 @@ namespace QuarkPHP {
 
         //手动载入JSON视图
         public static function ShowJSON($viewData = array()) {
+			header('Content-type: text/json; charset=utf-8');
             echo json_encode($viewData);
         }
 
