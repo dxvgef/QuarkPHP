@@ -16,7 +16,7 @@ namespace QuarkPHP {
 	*/
 
 	//版本号
-	//public static $Version = '1.0.3';
+	//public static $Version = '1.0.5';
 
     //调度器
     class Dispatcher {
@@ -63,7 +63,8 @@ namespace QuarkPHP {
                     }
                     break;
                 case 'json';
-                    return json_encode(Base::$ViewData);
+					echo json_encode(Base::$ViewData);
+					return;
                     break;
             }
 
