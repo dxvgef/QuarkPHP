@@ -45,7 +45,7 @@ namespace QuarkPHP {
             }
 
             //把路由参数传入到
-            Base::$RouteParams =& $routerParams;
+            Base::$RouteParams = $routerParams;
 
             //打开输出缓存
             ob_start();
