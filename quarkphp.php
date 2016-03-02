@@ -534,17 +534,24 @@ namespace QuarkPHP {
 
         //执行上传
         static function start() {
+            $result = array(
+                'filename' => '',
+                'error' => '',
+            );
             //如果没有定义文件大小限置
             if (self::$option['allowSize'] == 0) {
-                return 'allowSize属性值无效(' . self::$option['allowSize'] . ')';
+                $result['error'] = 'allowSize属性值无效(' . self::$option['allowSize'] . ')';
+                return $result;
             }
             //如果没有定义保存文件名
             if (self::$option['saveName'] == '') {
-                return 'saveName属性值无效(' . self::$option['saveName'] . ')';
+                $result['error'] = 'saveName属性值无效(' . self::$option['saveName'] . ')';
+                return $result;
             }
             //如果没有上传数据
             if (!isset($_FILES[self::$option['inputName']])) {
-                return '请选择要上传的文件';
+                $result['error'] = '请选择要上传的文件';
+                return $result;
             }
 
             //获取原始文件名
@@ -558,18 +565,21 @@ namespace QuarkPHP {
 
             //检查文件大小
             if (self::$option['allowSize'] < $srcSize) {
-                return '文件大小超出限制(' . $srcSize . ')';
+                $result['error'] = '文件大小超出限制(' . $srcSize . ')';
+                return $result;
             }
             //检查文件MIME值
             if (empty(self::$option['allowMIME']) == false && in_array($srcMIME, self::$option['allowMIME'], true) == false) {
-                return '不允许上传该类型的文件(' . $srcMIME . ')';
+                $result['error'] = '不允许上传该类型的文件(' . $srcMIME . ')';
+                return $result;
             }
 
             //如果目录不存在
             if (!is_dir(self::$option['savePath'])) {
                 //创建目录
                 if (!mkdir(self::$option['savePath'])) {
-                    return '无法创建文件保存目录(' . self::$option['savePath'] . ')';
+                    $result['error'] = '无法创建文件保存目录(' . self::$option['savePath'] . ')';
+                    return $result;
                 }
             }
 
@@ -589,7 +599,8 @@ namespace QuarkPHP {
             $tmpName = $_FILES[self::$option['inputName']]['tmp_name'];
             //保存文件
             if (!move_uploaded_file($tmpName, self::$option['savePath'] . '/' . self::$option['saveName'] . '.' . $srcSuffix)) {
-                return '文件上传失效，请检查目录权限';
+                $result['error'] = '文件上传失效，请检查目录权限';
+                return $result;
             }
 
             //获取上传结果
@@ -598,25 +609,31 @@ namespace QuarkPHP {
             //判断上传结果
             switch ($filesError) {
                 case 0:
-                    return self::$option['saveName'] . '.' . $srcSuffix;
+                    $result['filename'] = self::$option['saveName'] . '.' . $srcSuffix;
+                    return $result;
                     break;
                 case 1:
-                    return '文件大小(' . $srcSize . ')超出PHP的限制';
+                    $result['error'] = '文件大小(' . $srcSize . ')超出PHP的限制';
+                    return $result;
                     break;
                 case 2:
-                    return '文件大小超出HTML表单中指定的限制';
+                    $result['error'] = '文件大小超出HTML表单中指定的限制';
+                    return $result;
                     break;
                 case 3:
-                    return '文件未完整上传';
+                    $result['error'] = '文件未完整上传';
+                    return $result;
                     break;
                 case 4:
-                    return '文件上传失败';
+                    $result['error'] = '文件上传失败';
+                    return $result;
                     break;
                 case 5:
-                    return '上传文件的大小为0';
+                    $result['error'] = '上传文件的大小为0';
+                    return $result;
                     break;
             }
-            return true;
+            return $result;
         }
     }
 }
